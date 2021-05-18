@@ -8,12 +8,66 @@
 #define print(s) std::cout << s << std::endl;
 
 
+
+void open_telegramm(std::string name) {
+    screen::Background window(1240, name, 740);
+    //int size = GetFileSize("data/user/friends/" + name + "/new");
+    while (window.is_open()) {
+    //    if ( size != GetFileSize("data/user/friends/" + name + "/new") ) {
+    //        std::cout << "New message";
+    //    }
+        window.draw_on_window(Background_test);
+        window.handler_button();
+        window.display();
+    }
+}
+
+
 void my_open() {
+    sf::Font font;
+    font.loadFromFile(path_to_font);
+    system("python3 walk.py");
+    std::string line;
+    std::vector<std::string> friends;
+    std::vector<screen::Icons> friends_icons;
+    std::ifstream in(sign_friends);
+    if ( in.is_open() ) {
+        while (getline(in, line)) {
+            friends.push_back(line);
+        }
+    }
+    for(int i = 0; i < friends.size(); ++i) {
+        friends_icons.push_back(screen::Icons(pers_settings_ava, screen::Point(i * 250, 0)));
+    }
     screen::Background window(1240, "MEMECRIA", 740);
     while (window.is_open()) {
         window.draw_on_window(Background_test);
-        window.handler_button();
-        
+        sf::Event event;
+        while (window.Get_window().pollEvent(event)) {
+            window.handler_button();
+            if (event.type == sf::Event::Closed) {
+                window.Get_window().close();
+            }
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                sf::Vector2i position_mouse = sf::Mouse::getPosition(window.Get_window());
+                for(int i = 0; i < friends_icons.size(); ++i) {
+                    if (friends_icons[i].click(position_mouse, window) == true) {
+                        //window.Get_window().close();
+                        open_telegramm(friends[i]);
+                    }
+               }
+            }
+        }
+        for(int i = 0; i < friends_icons.size(); ++i) {
+            friends_icons[i].draw_object(window.Get_window());
+            sf::Text text(friends[i], font);
+            text.setFont(font);
+            text.setCharacterSize(30);
+            text.setStyle(sf::Text::Bold);
+            text.setFillColor(sf::Color::Black);
+            text.setPosition(50 + 250 * i, 200);
+            window.Get_window().draw(text);
+        }
         window.display();
     }
 }
@@ -300,6 +354,7 @@ void sign_enter() {
         textbox.draw(sign.Get_window());
         sign.display();
     }
+    sign.my_clear();
     s1 = textbox.get_text();
     s1.pop_back();
     if ( s1 == s2 ) {
