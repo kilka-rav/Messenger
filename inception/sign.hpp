@@ -4,23 +4,12 @@
 #include <fstream>
 #include <iostream>
 #include "textbox.hpp"
-
+#include "send.hpp"
 #define print(s) std::cout << s << std::endl;
 
 
 
-void open_telegramm(std::string name) {
-    screen::Background window(1240, name, 740);
-    //int size = GetFileSize("data/user/friends/" + name + "/new");
-    while (window.is_open()) {
-    //    if ( size != GetFileSize("data/user/friends/" + name + "/new") ) {
-    //        std::cout << "New message";
-    //    }
-        window.draw_on_window(Background_test);
-        window.handler_button();
-        window.display();
-    }
-}
+void open_telegramm(std::string s);
 
 
 void my_open() {
@@ -366,6 +355,150 @@ void sign_enter() {
     }
 }
 
+
+
+void open_telegramm(std::string name) {
+    sf::Font font;
+    User personal;
+    personal.read(secret_path);
+    std::string name_str = personal.name + ": ";
+   
+    //std::vector<std::string> strings;
+    //strings.push_back(name_str);
+    font.loadFromFile(path_to_font);
+    int A = 100, B = 100;
+    std::string s3;
+    int count2 = 0;
+    int count = 0;
+    std::vector<std::string> strings;
+    //strings.push_back(name_str);
+    sf::Text suggestion;
+    suggestion.setFont(font);
+    suggestion.setFillColor(sf::Color::Black);    
+    suggestion.setStyle(sf::Text::Bold);
+    suggestion.setCharacterSize(60);
+    
+    std::string s1, s2;
+   // suggestion.setOrigin(suggestion.getLocalBounds().width / 2, suggestion.getLocalBounds().height);
+    float v_padding = suggestion.getLocalBounds().height;
+    
+    suggestion.setPosition(A, B);
+    
+    screen::Background window(1240, name, 740);
+    screen::Icons send(path_to_send_image, screen::Point(1080, 600));
+    screen::Icons send_mem(path_to_send_mem_image, screen::Point(1000, 500));
+    int flag = 0;
+    int flag_two = 0;
+    suggestion.setPosition(A, 200);    
+    Textbox_t textbox(suggestion);
+    bool isEnter = true; 
+    while (window.is_open() && isEnter ) {
+	    window.draw_on_window(Background_test);
+        send.draw_object(window.Get_window());
+        send_mem.draw_object(window.Get_window());
+        sf::Event event;
+        while (window.Get_window().pollEvent(event))  {
+            if (event.type == sf::Event::Closed ) {
+                window.Get_window().close();
+                break;
+            }
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                    sf::Vector2i position_mouse = sf::Mouse::getPosition(window.Get_window());
+                    if ( ( send.click(position_mouse, window) == true ) && (flag == 0) ) {
+                    //message
+                        std::cout << "flag = 1\n";
+                        flag = 1;
+                    }
+                    else if ( (send.click(position_mouse, window) == true ) && (flag == 1) ) {
+                        flag = 0;
+                        std::cout << "flag = 0\n";
+                        write_file_send(strings, name);
+                        //send_friend_SSH
+                    }
+                    else if ( (send_mem.click(position_mouse, window) == true) && ( flag_two == 0 )) {
+                        flag = 1;
+                        flag_two = 1;
+                    }
+                    else if ( (send_mem.click(position_mouse, window) == true) && ( flag_two == 2 ) ) {
+                        write_mem_send(strings, name);
+                        //send_friend_SSH
+                    }
+            }
+            if ( flag == 1 ) {
+                switch(event.type) {
+                    case sf::Event::Closed:
+                        window.Get_window().close();
+                        break;
+                    case sf::Event::KeyPressed:
+                        if ( event.key.code == sf::Keyboard::Escape )
+                            isEnter = false;
+                            break;
+                    case sf::Event::TextEntered:
+                        switch (event.text.unicode) {
+                            case 0xD:
+                                std::cout << "ENTER 29\n";
+                                if ( flag_two == 1 ) {
+                                    flag_two = 2;
+                                }
+                                //s2 = "";
+                                //for(int i = count; i < textbox.get_text().length(); ++i) {
+                                //    s2.push_back(textbox.get_text()[i]);
+                                //}
+                                strings.push_back(name_str + textbox.get_text());
+                            
+
+                                flag = 2;
+                            default:
+                                textbox.update(event);
+                        }
+                    }
+
+
+
+            }
+        
+            
+            
+        
+            
+
+        }
+        window.Get_window().draw(suggestion);
+        if ( flag == 2 ) {
+            B += 30;
+            s1 = name_str;
+            flag = 0;
+            count = textbox.get_text().length();
+        }
+
+        else {
+            s1 = "TYPE: " + textbox.get_text();
+        }
+       
+        for(int i = 0; i < strings.size(); ++i) {
+            window.draw_on_window(strings[i], 30, sf::Vector2f(0, 30 + (i)* 30)); 
+            //std::cout << "size = " << strings.size() << std::endl;
+        }
+        
+        sf::Text text(s1, font);
+        //window.draw_on_window(s1, 30, sf::Vector2f(0, B));
+        text.setFont(font);
+        text.setCharacterSize(30);
+        text.setStyle(sf::Text::Bold);
+        text.setFillColor(sf::Color::Black);
+        window.Get_window().draw(text);
+        window.Get_window().draw(suggestion);
+        textbox.draw(window.Get_window());
+        window.display();
+    }
+    /*
+    for(int i = 0; i != strings.size(); ++i) {
+        std::cout << strings[i];
+
+    }
+    */
+    window.my_clear();
+}
 
 
 /*

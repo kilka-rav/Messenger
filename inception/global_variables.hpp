@@ -16,6 +16,8 @@
 #define path_to_mem "../inception/data/image/mem.jpg"
 #define path_to_mem2 "../inception/data/image/mem2.jpg"
 #define path_to_dante "../inception/data/image/dante.jpg"
+#define path_to_send_image "../inception/data/image/send.png"
+#define path_to_send_mem_image "../inception/data/image/send_mem.jpeg"
 #define path_to_new_background "../inception/data/image/new_background.jpeg"
 #define pers_settings_ava "../inception/data/image/pers_settings_ava1.png"
 #define pers_settings_name_box "../inception/data/image/pers_settings_name_box.png"
@@ -26,6 +28,7 @@
 #define pers_settings_joke1 "../inception/data/image/pers_settings_joke1_1.png"
 #define pers_settings_joke2 "../inception/data/image/pers_settings_joke2_1.png"
 #define sign_friends "../inception/data/user/list_friend.txt"
+
 
 char secret_path[] = "data/user/user.txt";
 std::string two_secret_path = "data/user/user.txt";
