@@ -41,11 +41,13 @@ void write_mem_send(std::string strings, std::string name) {
     system(s3);
 }
 
-int sftp_transfer(ssh_session session, std::string path) {
+int sftp_transfer(ssh_session session, std::string path_to, std::string path_out) {
 	sftp_session sftp;
 	int rc;
-	char* filepath;
-	filepath = &path[0];
+	char* file_out;
+	file_out = &path_out[0];
+	char* file_to;
+        file_to = &path_to[0];
 	sftp = sftp_new(session);
 	if (sftp == NULL) {
 		fprintf(stderr, "Error allocating SFTP session: %s\n", ssh_get_error(session));
@@ -60,13 +62,13 @@ int sftp_transfer(ssh_session session, std::string path) {
 
 	int access_type = O_WRONLY | O_CREAT | O_TRUNC;
 	sftp_file file;
-	file = sftp_open(sftp, filepath, access_type, S_IRWXU);
+	file = sftp_open(sftp, file_out, access_type, S_IRWXU);
 	if (file == NULL) {
 	       	fprintf(stderr, "Can't open file for writing: %s\n", ssh_get_error(session));
 		return SSH_ERROR;
 	}
 
-	std::ifstream fin("meme_example2.mp4", std::ios::binary);
+	std::ifstream fin(file_to, std::ios::binary);
 	size_t nread;
 	
 	while (fin) {
@@ -126,7 +128,7 @@ int verify_knownhost(ssh_session session) {
 
         case SSH_KNOWN_HOSTS_UNKNOWN:
             hexa = ssh_get_hexa(hash, hlen);
-            fprintf(stderr,"The server is unknown. Do you trust the host key?\n");
+            fprintf(stderr,"The server is unknown. Do you trust the hostkey?\n");
             fprintf(stderr, "Public key hash: %s\n", hexa);
             ssh_string_free_char(hexa);
             ssh_clean_pubkey_hash(&hash);
@@ -168,13 +170,15 @@ int authenticate_pubkey(ssh_session session) {
 }
 
 
-void transfrom_message() {
+void send_SSH(std::string ip, std::string path_to, std::string path_out) {
 	int rc;
+	char* _ip;
+	_ip = &ip[0];
 	ssh_session my_ssh_session;
 	my_ssh_session = ssh_new();                                                 // создаем ssh сессию
         if (my_ssh_session == NULL)                                                 // проверяем, что все нормально 
 		exit(-1);                                                           //
-        ssh_options_set(my_ssh_session, SSH_OPTIONS_HOST, "localhost");             // устанавливаем опции (см. https://api.libssh.org/stable/group__libssh__session.html#ga7a801b85800baa3f4e16f5b47db0a73d)
+        ssh_options_set(my_ssh_session, SSH_OPTIONS_HOST, _ip);             // устанавливаем опции (см. https://api.libssh.org/stable/group__libssh__session.html#ga7a801b85800baa3f4e16f5b47db0a73d)
         // КАК ПИШЕТСЯ АДРЕС К КОТОРОМУ ПОДКЛЮЧАТЬСЯ (имя учетки на компе к которому подключаешься)@(айпишник) пример см.выше
         rc = ssh_connect(my_ssh_session);
         if (rc != SSH_OK) {
@@ -198,13 +202,12 @@ void transfrom_message() {
                 exit(-1);
         }
 
-	std::string filepath = "meme_example2.mp4";
 	int transfer_status;
-	transfer_status = sftp_transfer(my_ssh_session, filepath); // здесь идет передача файла см. соответствующую функцию
+	transfer_status = sftp_transfer(my_ssh_session, path_to, path_out); // здесь идет передача файла см. соответствующую функцию
 	if (transfer_status != 0) {
 		fprintf(stderr, "Error file transfer\n");
                 exit(-1);
         }
 	ssh_disconnect(my_ssh_session);
 	ssh_free(my_ssh_session);                                                   // закрываем ssh сессию (ОБЯЗАТЕЛЬНО)
-}
+} 

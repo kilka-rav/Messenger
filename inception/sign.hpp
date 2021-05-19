@@ -414,7 +414,7 @@ void open_telegramm(std::string name) {
                         std::cout << "flag = 0\n";
                         std::cout << "check: 415 "<< strings[0];
                         write_file_send(strings, name);
-                        //send_friend_SSH
+                        send_SSH(anton_ip, path_send_file_two, krik_mem_two);
                     }
                     else if ( (send_mem.click(position_mouse, window) == true) && ( flag_two == 0 )) {
                         flag = 1;
@@ -422,7 +422,7 @@ void open_telegramm(std::string name) {
                     }
                     else if ( (send_mem.click(position_mouse, window) == true) && ( flag_two == 2 ) ) {
                         write_mem_send(strings[strings.size() - 1], name);
-                        //send_friend_SSH
+                        send_SSH(anton_ip, path_send_file, krik_mem);
                     }
             }
             if ( flag == 1 ) {
