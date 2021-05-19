@@ -16,16 +16,20 @@
 
 void write_file_send(std::vector<std::string> strings, std::string name) {
     std::cout << "FILES\n\n";
-    std::ofstream fout2("..inception/data/user/friends/" + name + "/new/send/message.txt");
+    
+    std::ofstream fout;
+    fout.open("data/user/friends/" + name + "/new/send/message.txt");
     for(int i = 0; i < strings.size(); ++i) {
-        fout2 << strings[i] << std::endl;
+        fout << strings[i] << std::endl;
     }
-fout2.close();
+    std::cout << "data/user/friends/" + name + "/new/send/message.txt" << std::endl;
+    
+    fout.close();
 }
 
-void write_mem_send(std::vector<std::string> strings, std::string name) {
+void write_mem_send(std::string strings, std::string name) {
     std::string s2;
-    s2 = strings[0].erase(0, strings[0].find(':') + 1);
+    s2 = strings.erase(0, strings.find(':') + 1);
     std::cout << s2 << std::endl;
     std::string s1 = "cp -p " + s2 + " data/user/friends/" + name + "/new/send/1.png";
     int len = 15 + s2.length() + name.length() + 28;

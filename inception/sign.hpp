@@ -412,6 +412,7 @@ void open_telegramm(std::string name) {
                     else if ( (send.click(position_mouse, window) == true ) && (flag == 1) ) {
                         flag = 0;
                         std::cout << "flag = 0\n";
+                        std::cout << "check: 415 "<< strings[0];
                         write_file_send(strings, name);
                         //send_friend_SSH
                     }
@@ -420,7 +421,7 @@ void open_telegramm(std::string name) {
                         flag_two = 1;
                     }
                     else if ( (send_mem.click(position_mouse, window) == true) && ( flag_two == 2 ) ) {
-                        write_mem_send(strings, name);
+                        write_mem_send(strings[strings.size() - 1], name);
                         //send_friend_SSH
                     }
             }
@@ -440,14 +441,10 @@ void open_telegramm(std::string name) {
                                 if ( flag_two == 1 ) {
                                     flag_two = 2;
                                 }
-                                //s2 = "";
-                                //for(int i = count; i < textbox.get_text().length(); ++i) {
-                                //    s2.push_back(textbox.get_text()[i]);
-                                //}
+                                
                                 strings.push_back(name_str + textbox.get_text());
-                            
-
-                                flag = 2;
+                                print("check");
+                                std::cout << strings[0] << std::endl;
                             default:
                                 textbox.update(event);
                         }
