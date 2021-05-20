@@ -4,6 +4,6 @@ click on personal settings or Sign for any Size Window, code can follow it.
 RUN:
 _______________________________
 g++ -c paint.cpp
-g++ paint.o -o paint -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+g++ paint.o -o paint -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lssh -lstdc++fs
 ./paint
 _______________________________
