@@ -373,7 +373,6 @@ void recieve_mem(std::string filename, std::string name, std::string line) {
             }
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 sf::Vector2i position_mouse = sf::Mouse::getPosition(window.Get_window());
-                window.play_sound();
                 if (Like.click(position_mouse, window) == true) {
                     print("CHECK_CLICK");
                     if ( count == -1 ) {
