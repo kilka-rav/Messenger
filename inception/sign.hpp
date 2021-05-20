@@ -448,6 +448,7 @@ int check_new_memes(std::string name) {
 
 
 void open_telegramm(std::string name) {
+reboot:
     sf::Font font;
     User personal;
     personal.read(secret_path);
@@ -574,12 +575,6 @@ void open_telegramm(std::string name) {
 
 
             }
-        
-            
-            
-        
-            
-
         }
         window.Get_window().draw(suggestion);
         if ( flag == 2 ) {
@@ -595,6 +590,10 @@ void open_telegramm(std::string name) {
        
         for(int i = 0; i < global_strings.size(); ++i) {
             window.draw_on_window(global_strings[i], 30, sf::Vector2f(0, 30 + (i)* 30)); 
+            if ( 30 + i * 30 > 740 ) {
+                window.my_clear();
+                goto reboot;
+            }
             //std::cout << "size = " << strings.size() << stringsstd::endl;
         }
         
