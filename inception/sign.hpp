@@ -5,6 +5,7 @@
 #include <iostream>
 #include "textbox.hpp"
 #include "send.hpp"
+#include <experimental/filesystem>
 #define print(s) std::cout << s << std::endl;
 
 
@@ -355,6 +356,95 @@ void sign_enter() {
     }
 }
 
+void recieve_mem(std::string filename, std::string name, std::string line) {
+    screen::Background window(1240, "MEM", 700);
+    screen::Icons Like(path_to_like, screen::Point(800, 500));
+    screen::Icons Mem(filename, screen::Point(50, 0));
+    int count = 0;
+    while( window.is_open() ) {
+        sf::Event event;
+        while (window.Get_window().pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.Get_window().close();            //Issue: add my_CLOSE
+            } 
+            if ( count == 0 ) {
+                window.play_sound();
+                count = 2;
+            }
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                sf::Vector2i position_mouse = sf::Mouse::getPosition(window.Get_window());
+                window.play_sound();
+                if (Like.click(position_mouse, window) == true) {
+                    print("CHECK_CLICK");
+                    if ( count == -1 ) {
+                        count = 1;
+                    }
+                    else {
+                        count = -1;
+                    }
+                }
+            }
+        window.draw_on_window(Background_test);
+        Mem.draw_object(window.Get_window());
+        Like.draw_object(window.Get_window());
+        window.display();
+        window.handler_button();
+        }
+    }
+    if ( count == -1 ) {
+        std::string s1 = "mv ";
+        std::string s3 = " data/user/like_image/new/";
+        s1 = s1 + filename + s3;
+        char str[s1.length() + 1];
+        strcpy(str, s1.c_str());
+        system(str);
+        print("WORK_TRANSFORM");
+        system("python3 classification.py");
+    }
+    else {
+        std::string s1 = "mv ";
+        std::string s3 = " data/user/friends/" + name + "/history/";
+        s1 = s1 + filename + s3;
+        char str[s1.length() + 1];
+        strcpy(str, s1.c_str());
+        system(str);
+    }
+
+}
+
+int check_new_memes(std::string name) {
+    std::string s1 = "data/user/friends/" + name + "/new/reciever/";
+    std::string s2 = s1 + "message.txt";
+    bool exist = std::experimental::filesystem::exists(s2);
+    if ( exist == true ) {
+        return 1;
+    }
+    std::string s3 = "dir " + s1 + " > data/user/set_data.txt";
+    char s4[s3.length() + 1];
+    strcpy(s4, s3.c_str());
+    system(s4);
+
+    std::ifstream in("data/user/set_data.txt"); 
+    std::string line;
+    if ( in.is_open() ) {
+        while (getline(in, line)) {
+            int sz = line.length();
+            if ( ( line[sz - 4] == '.' ) && ( line[sz - 3] == 'p' ) && ( line[sz - 2] == 'n' ) && ( line[sz - 1] == 'g' ) ) {
+                print("RECIEVE MEME");
+                std::cout << line << std::endl;
+                recieve_mem(s1 + line, name, line);
+           
+            }
+            else if ( ( line[sz - 4] == '.' ) && ( line[sz - 3] == 'j' ) && ( line[sz - 2] == 'p' ) && ( line[sz - 1] == 'g' ) ) {
+                recieve_mem(s1 + line, name, line);
+            }
+        }
+    }
+
+    remove("data/user/set_data.txt");
+    return 0;
+    
+}
 
 
 void open_telegramm(std::string name) {
@@ -371,6 +461,7 @@ void open_telegramm(std::string name) {
     int count2 = 0;
     int count = 0;
     std::vector<std::string> strings;
+    std::vector<std::string> global_strings;
     //strings.push_back(name_str);
     sf::Text suggestion;
     suggestion.setFont(font);
@@ -389,10 +480,15 @@ void open_telegramm(std::string name) {
     screen::Icons send_mem(path_to_send_mem_image, screen::Point(1000, 500));
     int flag = 0;
     int flag_two = 0;
+    int flag_three = 0;
     suggestion.setPosition(A, 200);    
     Textbox_t textbox(suggestion);
     bool isEnter = true; 
+    std::string message_string_history = "data/user/friends/" + name + "/history/message.txt";
+    std::ofstream fout(message_string_history, std::ios::out | std::ios::app);
     while (window.is_open() && isEnter ) {
+        flag_three = check_new_memes(name);
+        //std::cout << "flag+three = " << flag_three << std::endl;
 	    window.draw_on_window(Background_test);
         send.draw_object(window.Get_window());
         send_mem.draw_object(window.Get_window());
@@ -402,6 +498,26 @@ void open_telegramm(std::string name) {
                 window.Get_window().close();
                 break;
             }
+            if ( flag_three == 1 ) {
+                window.play_sound();
+                std::string line;
+                std::string message_string = "data/user/friends/" + name + "/new/reciever/message.txt";
+                std::ifstream in(message_string); 
+                if ( in.is_open() ) {
+                    while (getline(in, line)) {
+                        global_strings.push_back(line);
+                        fout << line << std::endl;
+                    }
+                }
+                char s_mini[message_string.length() + 1];
+                strcpy(s_mini, message_string.c_str());
+                in.close();
+                remove(s_mini);
+
+            }
+        
+
+        
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                     sf::Vector2i position_mouse = sf::Mouse::getPosition(window.Get_window());
                     if ( ( send.click(position_mouse, window) == true ) && (flag == 0) ) {
@@ -414,7 +530,7 @@ void open_telegramm(std::string name) {
                         std::cout << "flag = 0\n";
                         std::cout << "check: 415 "<< strings[0];
                         write_file_send(strings, name);
-                        send_SSH(anton_ip, path_send_file_two, krik_mem_two);
+                        //send_SSH(anton_ip, path_send_file_two, krik_mem_two);
                     }
                     else if ( (send_mem.click(position_mouse, window) == true) && ( flag_two == 0 )) {
                         flag = 1;
@@ -422,7 +538,7 @@ void open_telegramm(std::string name) {
                     }
                     else if ( (send_mem.click(position_mouse, window) == true) && ( flag_two == 2 ) ) {
                         write_mem_send(strings[strings.size() - 1], name);
-                        send_SSH(anton_ip, path_send_file, krik_mem);
+                        //send_SSH(anton_ip, path_send_file, krik_mem);
                     }
             }
             if ( flag == 1 ) {
@@ -443,8 +559,13 @@ void open_telegramm(std::string name) {
                                 }
                                 
                                 strings.push_back(name_str + textbox.get_text());
-                                print("check");
-                                std::cout << strings[0] << std::endl;
+                                global_strings.push_back(name_str + textbox.get_text());
+                                fout << name_str + textbox.get_text() << std::endl;
+                            
+                                for(int i = 0; i < global_strings.size(); ++i) {
+                                    std::cout << global_strings[i];
+                                }
+                        
                             default:
                                 textbox.update(event);
                         }
@@ -472,9 +593,9 @@ void open_telegramm(std::string name) {
             s1 = "TYPE: " + textbox.get_text();
         }
        
-        for(int i = 0; i < strings.size(); ++i) {
-            window.draw_on_window(strings[i], 30, sf::Vector2f(0, 30 + (i)* 30)); 
-            //std::cout << "size = " << strings.size() << std::endl;
+        for(int i = 0; i < global_strings.size(); ++i) {
+            window.draw_on_window(global_strings[i], 30, sf::Vector2f(0, 30 + (i)* 30)); 
+            //std::cout << "size = " << strings.size() << stringsstd::endl;
         }
         
         sf::Text text(s1, font);
@@ -488,13 +609,9 @@ void open_telegramm(std::string name) {
         textbox.draw(window.Get_window());
         window.display();
     }
-    /*
-    for(int i = 0; i != strings.size(); ++i) {
-        std::cout << strings[i];
 
-    }
-    */
     window.my_clear();
+    fout.close();
 }
 
 

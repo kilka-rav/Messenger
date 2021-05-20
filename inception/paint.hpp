@@ -87,8 +87,10 @@ namespace screen {       // Everything required for screen operation is stored h
     class Background {                                                                          // Class used for operations with background
     private:                                                                                //
         sf::RenderWindow window;                                                          // Reference: https://www.sfml-dev.org/documentation/2.5.1/classsf_1_1RenderWindow.php
+    public:
         void play_sound(); // Different functions used for interaction with the active window
         //void my_clear();
+    private:
         sf::Vector2u Begin_size;
         float kx;
         float ky;
