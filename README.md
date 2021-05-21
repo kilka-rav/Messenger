@@ -26,4 +26,8 @@ START:
 CAPABILITIES:
 	share messages, memes, classication of memes.
 Screenshots:
-	
+	![SIGN](https://github.com/kilka-rav/Messenger/blob/main/screen/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202021-05-21%2018-23-25.png)
+	![INFO](https://github.com/kilka-rav/Messenger/blob/main/screen/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202021-05-21%2018-24-08.png)
+	![CHECK_PASSWORD](https://github.com/kilka-rav/Messenger/blob/main/screen/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202021-05-21%2018-24-19.png)
+	![FRIEND_LIST](https://github.com/kilka-rav/Messenger/blob/main/screen/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202021-05-21%2018-24-25.png)
+	![MESSAGE](https://github.com/kilka-rav/Messenger/blob/main/screen/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202021-05-21%2018-28-17.png)
