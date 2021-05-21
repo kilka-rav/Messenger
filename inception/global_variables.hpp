@@ -9,12 +9,14 @@
 #include <thread>         // std::this_thread::sleep_for
 #include <chrono>         // std::chrono::seconds
 
-std::string anton_ip = "anton@192.168.43.57";
-std::string path_send_file = "data/user/friends/Anton/new/send/1.png";
-std::string krik_mem = "/home/anton/PROJECT/Messenger/inception/data/user/like_image/new/1.png";
-std::string path_send_file_two = "data/user/friends/Anton/new/send/message.txt";
-std::string krik_mem_two = "PROJECT/Messenger/inception/data/user/friends/ravil/receiver/message.txt";
 
+//You have to change this variables for personal use
+std::string anton_ip = "anton@192.168.43.57";
+std::string path_send_file = "data/user/friends/Anton/new/send/1.jpg";
+std::string krik_mem = "PROJECT/Messenger/inception/data/user/friends/Anton/new/reciever/1.jpg";
+std::string path_send_file_two = "data/user/friends/Anton/new/send/message.txt";
+std::string krik_mem_two = "PROJECT/Messenger/inception/data/user/friends/ravil/new/reciever/message.txt";
+//END 
 
 #define path_to_like "../inception/data/image/like.jpg"
 #define path_to_font "../inception/data/fonts/19413.ttf"

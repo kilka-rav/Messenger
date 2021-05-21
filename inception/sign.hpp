@@ -359,6 +359,7 @@ void sign_enter() {
 void recieve_mem(std::string filename, std::string name, std::string line) {
     screen::Background window(1240, "MEM", 700);
     screen::Icons Like(path_to_like, screen::Point(800, 500));
+    std::cout << filename << " = filename";
     screen::Icons Mem(filename, screen::Point(50, 0));
     int count = 0;
     while( window.is_open() ) {
@@ -460,6 +461,7 @@ reboot:
     std::string s3;
     int count2 = 0;
     int count = 0;
+    
     std::vector<std::string> strings;
     std::vector<std::string> global_strings;
     //strings.push_back(name_str);
@@ -528,9 +530,9 @@ reboot:
                     else if ( (send.click(position_mouse, window) == true ) && (flag == 1) ) {
                         flag = 0;
                         std::cout << "flag = 0\n";
-                        std::cout << "check: 415 "<< strings[0];
+                       // std::cout << "check: 415 "<< strings[0];
                         write_file_send(strings, name);
-                        //send_SSH(anton_ip, path_send_file_two, krik_mem_two);
+                        send_SSH(anton_ip, path_send_file_two, krik_mem_two);
                     }
                     else if ( (send_mem.click(position_mouse, window) == true) && ( flag_two == 0 )) {
                         flag = 1;
@@ -538,7 +540,7 @@ reboot:
                     }
                     else if ( (send_mem.click(position_mouse, window) == true) && ( flag_two == 2 ) ) {
                         write_mem_send(strings[strings.size() - 1], name);
-                        //send_SSH(anton_ip, path_send_file, krik_mem);
+                        send_SSH(anton_ip, path_send_file, krik_mem);
                     }
             }
             if ( flag == 1 ) {
@@ -589,6 +591,7 @@ reboot:
        
         for(int i = 0; i < global_strings.size(); ++i) {
             window.draw_on_window(global_strings[i], 30, sf::Vector2f(0, 30 + (i)* 30)); 
+      
             if ( 30 + i * 30 > 740 ) {
                 window.my_clear();
                 goto reboot;

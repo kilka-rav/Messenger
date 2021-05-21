@@ -31,7 +31,7 @@ void write_mem_send(std::string strings, std::string name) {
     std::string s2;
     s2 = strings.erase(0, strings.find(':') + 1);
     std::cout << s2 << std::endl;
-    std::string s1 = "cp -p " + s2 + " data/user/friends/" + name + "/new/send/1.png";
+    std::string s1 = "cp -p " + s2 + " data/user/friends/" + name + "/new/send/1.jpg";
     int len = 15 + s2.length() + name.length() + 28;
     char s3[len];
     for(int i = 0; i < len; ++i) {
